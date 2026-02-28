@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "FastAPI Debug",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": ["main:app", "--reload"],
+            "cwd": "${workspaceFolder}/python/fastapi"
+        },
+        {
+            "name": "pytest",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "args": ["tests/"]
+        },
+        {
+            "name": "スクリプト実行",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}"   // 今開いてるファイルを実行
+        }
+    ]
+}
