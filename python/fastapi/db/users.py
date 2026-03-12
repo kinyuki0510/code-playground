@@ -1,16 +1,16 @@
 from db.connection import get_db
 
-def init():
-    with get_db() as con:
-        with con.cursor() as cur:
-            cur.execute(
-                """
-                create table if not exists users(
-                    id serial primary key,
-                    name text not null,
-                    age integer not null
-                )
-                """)
+# def init():
+#     with get_db() as con:
+#         with con.cursor() as cur:
+#             cur.execute(
+#                 """
+#                 create table if not exists users(
+#                     id serial primary key,
+#                     name text not null,
+#                     age integer not null
+#                 )
+#                 """)
 
 
 def get_user(user_id: int):

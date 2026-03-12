@@ -9,8 +9,6 @@ import db
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("アプリケーションの起動前の処理")
-    db.users.init()
-    
     yield
     print("アプリケーションの終了前の処理")
 
