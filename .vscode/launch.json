@@ -2,12 +2,31 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "FastAPI Docker Attach",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/python/fastapi",
+                    "remoteRoot": "/app"
+                }
+            ]
+        },
+        {
             "name": "FastAPI Debug",
             "type": "debugpy",
             "request": "launch",
             "module": "uvicorn",
             "args": ["main:app", "--reload"],
-            "cwd": "${workspaceFolder}/python/fastapi"
+            "cwd": "${workspaceFolder}/python/fastapi",
+            "envFile": "${workspaceFolder}/python/fastapi/.env",
+            "env": {
+                "DATABASE_URL": "postgresql://appuser:secret@localhost:5432/appdb"
+            }
         },
         {
             "name": "pytest",
