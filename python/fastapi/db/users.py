@@ -1,4 +1,6 @@
-from db.connection import get_db
+from .connection import get_db
+from .session import get_session
+from .models import User
 
 # def init():
 #     with get_db() as con:
@@ -13,50 +15,39 @@ from db.connection import get_db
 #                 """)
 
 
-def get_user(user_id: int):
-    with get_db() as con:
-        with con.cursor() as cur:
-            cur.execute(
-                """
-                select id, name, age from users where id = %s
-                """, (user_id,))
-            user = cur.fetchone()
-
-    if user is None:
-        return None
-
-    return {"id": user[0], "name": user[1], "age": user[2]}
+def get_user(user_id: int) -> User | None:
+    with get_session() as session:
+        #user = session.query(User).filter(User.id == user_id).first()
+        user = session.get(User, user_id)
+        return user
 
 
 def create_user(name: str, age: int) -> int:
-    with get_db() as con:
-        with con.cursor() as cur:
-            cur.execute(
-                """
-                insert into users (name, age) values (%s, %s) returning id
-                """, (name, age))
-            user_id = cur.fetchone()[0]
-
-    return user_id
+    with get_session() as session:
+        user = User(name=name, age=age)
+        session.add(user)
+        session.flush()
+        
+        return user.id
 
 
-def update_user(user_id: int, name: str, age: int) -> dict | None:
-    with get_db() as con:
-        with con.cursor() as cur:
-            cur.execute(
-                """
-                update users set name = %s, age = %s where id = %s
-                returning id, name, age
-                """, (name, age, user_id))
-            user = cur.fetchone()
-
-    return {"id": user[0], "name": user[1], "age": user[2]} if user else None
-
+def update_user(user_id: int, name: str, age: int) -> User | None:
+    with get_session() as session:
+        user = session.get(User, user_id)
+        
+        if user is None:
+            return None
+        
+        user.name = name
+        user.age = age
+        
+        return user
+        
 
 def delete_user(user_id: int):
-    with get_db() as con:
-        with con.cursor() as cur:
-            cur.execute(
-                """
-                delete from users where id = %s
-                """, (user_id,))
+    with get_session() as session:
+        user = session.get(User, user_id)
+        
+        if user is not None:
+            session.delete(user)
+    
